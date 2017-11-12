@@ -27,7 +27,7 @@ public class Booking {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(
-                    "jdbc:sqlite:C:\\Users\\Sonikpalms\\IdeaProjects\\Basebooks\\src\\com\\company\\sqlite\\books.db");
+                    "jdbc:sqlite:C:\\Users\\JonnyB\\IdeaProjects\\Basebooks\\src\\com\\company\\sqlite\\books.db");
             System.out.println("CONNECT BASE SUCESSFULLY");
             System.out.println("Please Enter operation: add, delete, edit, all");
             Scanner scanner = new Scanner(System.in);
@@ -69,6 +69,12 @@ public class Booking {
     private void edit() {
         try {
 
+
+            Statement statement = connection.createStatement();
+
+
+            Class.forName("org.sqlite.JDBC");
+
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter book name_new: ");
             String name_new = scanner.nextLine();
@@ -76,17 +82,35 @@ public class Booking {
             String name_old = scanner.nextLine();
 
 
-            String querry = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
-            PreparedStatement statement = connection.prepareStatement(querry);
 
 
-            statement.executeUpdate();
+            String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
+            //PreparedStatement statement = connection.prepareStatement(sql);
+
+
+            statement.executeUpdate(sql);
+
+
+            ResultSet rs = statement.executeQuery("SELECT * FROM books;");
+
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String author = rs.getString("author");
+                String name = rs.getString("name");
+                System.out.println(id + "\t| " + author + "\t| " + name);
+            }
             System.out.println("Book was Update");
+
+            rs.close();
             statement.close();
+            connection.close();
+
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+        System.out.println("Operation done successfully");
+
 
 
     }
