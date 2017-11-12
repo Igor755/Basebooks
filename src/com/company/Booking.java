@@ -8,7 +8,6 @@ import java.util.Scanner;
 
 public class Booking {
 
-    //public Booking program;
     public String operation = "";
 
 
