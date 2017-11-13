@@ -8,6 +8,8 @@ import java.util.Scanner;
 public class Booking {
 
     public String operation = "";
+    public Statement statement;
+    public String error = "Error № 666";
 
 
     public static void main(String[] args) {
@@ -26,7 +28,7 @@ public class Booking {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(
-                    "jdbc:sqlite:C:\\Users\\i.metlin\\IdeaProjects\\Basebooks\\src\\com\\company\\sqlite\\books.db");
+                    "jdbc:sqlite:C:\\Users\\Sonikpalms\\IdeaProjects\\Basebooks\\src\\com\\company\\sqlite\\books.db");
             System.out.println("CONNECT BASE SUCESSFULLY");
             System.out.println("Please Enter operation: add, delete, edit, all");
             Scanner scanner = new Scanner(System.in);
@@ -72,35 +74,6 @@ public class Booking {
     private void edit() {
         try {
 
-            /*
-
-            ResultSet rs = statement.executeQuery("SELECT * FROM books WHERE name IN ('" + name_old + "')");
-            if (rs.wasNull() == true) {
-
-                while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String author = rs.getString("author");
-                    String name = rs.getString("name");
-                    System.out.println(id + "\t| " + author + "\t| " + name);
-                    System.out.println("Operation done successfully");
-                    rs.close();
-                    statement.close();
-                    connection.close();
-                }
-            } else {
-
-                Statement statementnew = connection.createStatement();
-                String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
-                //PreparedStatement statementnew = connection.prepareStatement(sql);
-                statementnew.executeUpdate(sql);
-
-                System.out.println("Book was Update");
-                rs.close();
-                statement.close();
-                connection.close();
-            }*/
-
-            Statement statement = connection.createStatement();
             Class.forName("org.sqlite.JDBC");
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter book name_new: ");
@@ -108,16 +81,21 @@ public class Booking {
             System.out.print("Enter book name_old: ");
             String name_old = scanner.nextLine();
 
-            ResultSet rs = statement.executeQuery("Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ");
-            if (rs.wasNull() == false) {
-                System.out.println("Operation done successfully");
-                rs.close();
+
+            statement = connection.createStatement();
+            String query = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
+            int rs = statement.executeUpdate(query);
+
+
+            if (rs == 0) {
+                System.out.println(error + " | " + "book name = " + name_old + " | " + "not found in database");
+
                 statement.close();
                 connection.close();
 
             } else {
                 System.out.println("Book was Update");
-                rs.close();
+
                 statement.close();
                 connection.close();
             }
@@ -125,7 +103,7 @@ public class Booking {
 
         {
 
-                System.out.println(e.getMessage());
+            System.out.println(e.getMessage());
 
 
         }
@@ -140,19 +118,29 @@ public class Booking {
             System.out.print("Enter book name: ");
             String name_book = scanner.nextLine();
 
-
-            String querry = "DELETE from books WHERE name = ?";
-            PreparedStatement statement = connection.prepareStatement(querry);
-
-            statement.setString(1, name_book);
-            statement.executeUpdate();
-
-            System.out.println("Book was removed");
-            statement.close();
+            statement = connection.createStatement();
+            String querry = "DELETE from books WHERE name ='" + name_book + "' ";
+            int rs = statement.executeUpdate(querry);
 
 
-        } catch (Exception e) {
+            if (rs == 0) {
+                System.out.println(error + " | " + "book name = " + name_book + " | " + "not found in database");
+
+                statement.close();
+                connection.close();
+
+            } else {
+                System.out.println("Book was removed");
+
+                statement.close();
+                connection.close();
+            }
+        } catch (Exception e)
+
+        {
+
             System.out.println(e.getMessage());
+
 
         }
 
@@ -169,7 +157,7 @@ public class Booking {
             String querry = "INSERT INTO books (author, name) " +
                     "VALUES ('" + author + "', '" + name + "')";
 
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             statement.executeUpdate(querry);
 
             System.out.println("Book was added");
@@ -184,7 +172,7 @@ public class Booking {
 
     void select() {
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             String query =
                     "SELECT id, author, name " +
                             " FROM books " +
