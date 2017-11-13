@@ -82,9 +82,7 @@ public class Booking {
             String name_old = scanner.nextLine();
 
 
-
-
-           String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
+            String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
 
 
             PreparedStatement statement = connection.prepareStatement(sql);
@@ -92,9 +90,7 @@ public class Booking {
             System.out.println("Book was Update");
 
 
-
             statement.close();
-            connection.close();
 
 
         } catch (Exception e) {
