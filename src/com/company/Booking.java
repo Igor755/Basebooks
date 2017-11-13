@@ -1,6 +1,5 @@
 package com.company;
 
-import com.oracle.deploy.update.UpdateCheck;
 
 import java.sql.*;
 import java.util.Scanner;
@@ -27,7 +26,7 @@ public class Booking {
         try {
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection(
-                    "jdbc:sqlite:C:\\Users\\JonnyB\\IdeaProjects\\Basebooks\\src\\com\\company\\sqlite\\books.db");
+                    "jdbc:sqlite:C:\\Users\\i.metlin\\IdeaProjects\\Basebooks\\src\\com\\company\\sqlite\\books.db");
             System.out.println("CONNECT BASE SUCESSFULLY");
             System.out.println("Please Enter operation: add, delete, edit, all");
             Scanner scanner = new Scanner(System.in);
@@ -37,18 +36,22 @@ public class Booking {
             switch (operation) {
                 case "add":
                     insert();
+                    close();
                     break;
 
                 case "delete":
                     remove();
+                    close();
                     break;
 
                 case "edit":
                     edit();
+                    close();
                     break;
 
                 case "all":
                     select();
+                    close();
                     break;
 
                 default:
@@ -70,9 +73,6 @@ public class Booking {
         try {
 
 
-            Statement statement = connection.createStatement();
-
-
             Class.forName("org.sqlite.JDBC");
 
             Scanner scanner = new Scanner(System.in);
@@ -84,24 +84,15 @@ public class Booking {
 
 
 
-            String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
-            //PreparedStatement statement = connection.prepareStatement(sql);
+           String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
 
 
-            statement.executeUpdate(sql);
-
-
-            ResultSet rs = statement.executeQuery("SELECT * FROM books;");
-
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String author = rs.getString("author");
-                String name = rs.getString("name");
-                System.out.println(id + "\t| " + author + "\t| " + name);
-            }
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.executeUpdate();
             System.out.println("Book was Update");
 
-            rs.close();
+
+
             statement.close();
             connection.close();
 
@@ -109,8 +100,6 @@ public class Booking {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Operation done successfully");
-
 
 
     }
