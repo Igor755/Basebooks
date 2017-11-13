@@ -72,31 +72,63 @@ public class Booking {
     private void edit() {
         try {
 
+            /*
 
+            ResultSet rs = statement.executeQuery("SELECT * FROM books WHERE name IN ('" + name_old + "')");
+            if (rs.wasNull() == true) {
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String author = rs.getString("author");
+                    String name = rs.getString("name");
+                    System.out.println(id + "\t| " + author + "\t| " + name);
+                    System.out.println("Operation done successfully");
+                    rs.close();
+                    statement.close();
+                    connection.close();
+                }
+            } else {
+
+                Statement statementnew = connection.createStatement();
+                String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
+                //PreparedStatement statementnew = connection.prepareStatement(sql);
+                statementnew.executeUpdate(sql);
+
+                System.out.println("Book was Update");
+                rs.close();
+                statement.close();
+                connection.close();
+            }*/
+
+            Statement statement = connection.createStatement();
             Class.forName("org.sqlite.JDBC");
-
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter book name_new: ");
             String name_new = scanner.nextLine();
             System.out.print("Enter book name_old: ");
             String name_old = scanner.nextLine();
 
+            ResultSet rs = statement.executeQuery("Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ");
+            if (rs.wasNull() == false) {
+                System.out.println("Operation done successfully");
+                rs.close();
+                statement.close();
+                connection.close();
 
-            String sql = "Update books set name ='" + name_new + "'WHERE name='" + name_old + "' ";
+            } else {
+                System.out.println("Book was Update");
+                rs.close();
+                statement.close();
+                connection.close();
+            }
+        } catch (Exception e)
+
+        {
+
+                System.out.println(e.getMessage());
 
 
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.executeUpdate();
-            System.out.println("Book was Update");
-
-
-            statement.close();
-
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
         }
-
 
     }
 
