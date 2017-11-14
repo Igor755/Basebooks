@@ -5,7 +5,7 @@ Test for Irens
 
 Project with a console interface, for managing a library. Use commands:
 
-- Add a book.
+- add a book.
 - delete the book.
 - change the name of the book.
 - show all.
